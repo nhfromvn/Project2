@@ -1,49 +1,57 @@
 <template>
+
   <div>
+    <h2 v-if="user_data.role=='student'">Thông tin học sinh</h2>
+    <h2 v-if="user_data.role=='cadre'">Thông tin cán bộ </h2>
+    <h2 v-if="user_data.role=='teacher'">Thông tin học giáo viên</h2>
+    <hr>
     <div>
-      <img style="height: 200px;width: 200px" src="/thpt/static/app/img/Anh-meo-cute-dang-yeu-de-thuong.jpg">
+      <img style="height: 200px;width: 200px" :src="user_data.image_url">
     </div>
     <div class="label-form">Thông tin cá nhân</div>
     <div style="display: flex">
       <div style="flex:1">
-        <div class="infomation">Họ và tên:</div>
-        <div class="infomation">Lớp:</div>
-        <div class="infomation">Giới tính:</div>
-        <div class="infomation">Ngày sinh:</div>
+        <div class="infomation">Họ và tên: {{ user_data.name }}</div>
+        <div v-if="user_data.role=='student'" class="infomation">Lớp: {{ user_data._class.name }}</div>
+        <div class="infomation">Giới tính: {{ user_data.gender.name }}</div>
+        <div class="infomation">Ngày sinh: {{ user_data.dob }}</div>
+        <div v-if="user_data.role=='cadre'" class="infomation">Học vấn: {{ user_data.literacy }}</div>
       </div>
       <div style="flex:1">
-        <div class="infomation">Dân tộc:</div>
-        <div class="infomation">Tôn giáo:</div>
-        <div class="infomation">Số điện thoại</div>
-        <div class="infomation"> Địa chỉ:</div>
+        <div class="infomation">Dân tộc: {{ user_data.ethnicity }}</div>
+        <div class="infomation">Tôn giáo: {{ user_data.religion }}</div>
+        <div class="infomation">Số điện thoại {{ user_data.phone }}</div>
+        <div class="infomation"> Địa chỉ: {{ user_data.address }}</div>
       </div>
     </div>
-    <div class="label-form">Thông tin gia đình</div>
-    <div style="display: flex">
-      <div style="flex:1">
-        <div class="infomation">
-          Họ và tên bố:
+    <template v-if="user_data.role=='student'">
+      <div class="label-form">Thông tin gia đình</div>
+      <div style="display: flex">
+        <div style="flex:1">
+          <div class="infomation">
+            Họ và tên bố:
+          </div>
+          <div class="infomation">
+            Số điện thoại:
+          </div>
+          <div class="infomation">
+            Nghề nghiệp:
+          </div>
         </div>
-        <div class="infomation">
-          Số điện thoại:
-        </div>
-        <div class="infomation">
-          Nghề nghiệp:
+        <div style="flex:1">
+          <div class="infomation">
+            Họ và tên mẹ:
+          </div>
+          <div class="infomation">
+            Số điện thoại:
+          </div>
+          <div class="infomation">
+            Nghề nghiệp:
+          </div>
         </div>
       </div>
-      <div style="flex:1">
-        <div class="infomation">
-          Họ và tên mẹ:
-        </div>
-        <div class="infomation">
-          Số điện thoại:
-        </div>
-        <div class="infomation">
-          Nghề nghiệp:
-        </div>
-      </div>
-    </div>
-    <div style="display: flex;gap: 10px; align-items: center">
+    </template>
+    <div v-if="user_data.role=='student'" style="display: flex;gap: 10px; align-items: center">
       <div class="label-form">Thông tin lớp</div>
       <font-awesome-icon v-if="!show_table" :icon="['fass', 'caret-down']"
                          style="cursor: pointer;z-index: 10;width: 30px;"
@@ -52,66 +60,39 @@
                          style="cursor: pointer;z-index: 10;width: 30px;"
                          @click="this.show_table=!this.show_table"/>
     </div>
+    <template v-if="show_table&&user_data.role=='student'">
+      <div class="infomation"> Danh sách lớp:</div>
+      <table class="table table-responsive table-bordered">
+        <thead>
+        <tr>
+          <th>STT</th>
+          <th>
+            Họ
+          </th>
+          <th>
+            Tên đệm
+          </th>
+          <th>
+            Tên
+          </th>
+          <th>
+            Ngày sinh
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(student,index) in user_data.list_class_student">
+          <td>{{ index + 1 }}</td>
+          <td> {{ student.first_name }}</td>
+          <td>{{ student.middle_name }}</td>
+          <td>{{ student.last_name }}</td>
+          <td>{{ student.dob }}</td>
+        </tr>
+        </tbody>
 
-    <table v-if="show_table" class="table table-responsive table-bordered">
-      <thead>
-      <tr>
-        <th>STT</th>
-        <th>
-          Họ
-        </th>
-        <th>
-          Tên đệm
-        </th>
-        <th>
-          Tên
-        </th>
-        <th>
-          Ngày sinh
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>1</td>
-        <td> Hoàng</td>
-        <td></td>
-        <td>Nam</td>
-        <td>21/04/2001</td>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td> Hoàng</td>
-        <td></td>
-        <td>Nam</td>
-        <td>21/04/2001</td>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td> Hoàng</td>
-        <td></td>
-        <td>Nam</td>
-        <td>21/04/2001</td>
-      </tr>
-
-      <tr>
-        <td>1</td>
-        <td> Hoàng</td>
-        <td></td>
-        <td>Nam</td>
-        <td>21/04/2001</td>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td> Hoàng</td>
-        <td></td>
-        <td>Nam</td>
-        <td>21/04/2001</td>
-      </tr>
-
-
-      </tbody>
-    </table>
+      </table>
+      <div class="infomation">Giáo viên chủ nhiệm: {{ user_data._class.teacher }}</div>
+    </template>
   </div>
 </template>
 
@@ -120,11 +101,27 @@ import {defineComponent} from 'vue'
 
 export default defineComponent({
   name: "DashBoard",
+  props: {
+    proptemp: Object,
+    user_data: Object
+  },
   data() {
     return {
       show_table: false,
     }
 
+  },
+  mounted() {
+    console.log(this.user_data)
+    if(this.user_data.role == 'student')
+    {
+      this.user_data.list_class_student.sort((a, b) => {
+        if (a.last_name == b.last_name) {
+          return a.first_name.localeCompare(b.first_name)
+        }
+        return a.last_name.localeCompare(b.last_name)
+      })
+    }
   }
 
 })

@@ -1,8 +1,17 @@
 <odoo>
     <data>
-        <template id="test">
+         <template id="error">
             <head>
-                <title>thpt</title>
+                <title>Hệ thống quản lý THPT</title>
+            </head>
+            <body>
+                <div>Bạn đã chọn sai vai trò hãy quay lại để chọn</div>
+                <button><a href="/web/session/logout?redirect=/thpt">Quay lại</a></button>
+            </body>
+        </template>
+        <template id="index">
+            <head>
+                <title>Hệ thống quản lý THPT</title>
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
                       integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
                 <link rel="stylesheet" href="/thpt/static/css/style.css"/>
@@ -13,7 +22,12 @@
             <body>
                 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
                         integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""/>
+
                 <div id="app"/>
+                <script>
+                    window.user_data =
+                    <t t-raw="data"/>
+                </script>
                 <script src="thpt/static/js/index.js"/>
             </body>
         </template>

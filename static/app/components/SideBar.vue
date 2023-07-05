@@ -2,24 +2,26 @@
   <div id="container">
     <div style="display: flex;align-items: center;margin-top: 50px;gap: 10px">
       <img style="width: 40px;height: 40px;border-radius: 50%"
-           src="/thpt/static/app/img/Anh-meo-cute-dang-yeu-de-thuong.jpg"/>
+           :src="user_data.image_url"/>
 
-      <p>Nguyen Van A</p>
+      <p>{{ user_data.name }}</p>
     </div>
-    <div id="dashboard" style="display: flex;
+    <div style="display: flex;
                                      gap:5px">
 
       <div v-if="is_selected==pages[0]" class="frame_427318741 is_select">
-        <p>
-          Thông tin học sinh</p>
+        <p v-if="user_data.role=='student'">Thông tin học sinh</p>
+        <p v-if="user_data.role=='cadre'">Thông tin cán bộ </p>
+        <p v-if="user_data.role=='teacher'">Thông tin học giáo viên</p>
       </div>
       <div v-else class="frame_427318741" @click="onClick(0)">
-        <p>
-          Thông tin học sinh</p>
+        <p v-if="user_data.role=='student'">Thông tin học sinh</p>
+        <p v-if="user_data.role=='cadre'">Thông tin cán bộ </p>
+        <p v-if="user_data.role=='teacher'">Thông tin học giáo viên</p>
       </div>
     </div>
 
-    <div id="integration" style="display: flex;
+    <div style="display: flex;
                                      gap:5px">
       <div v-if="is_selected==pages[1]" class="frame_427318741 is_select">
         <p>
@@ -31,7 +33,7 @@
       </div>
     </div>
 
-    <div id="meida_source" style="display: flex;
+    <div style="display: flex;
                                      gap:5px">
       <div v-if="is_selected==pages[2]" class="frame_427318741 is_select">
         <p>
@@ -42,7 +44,7 @@
           Học tập</p>
       </div>
     </div>
-    <div id="widgets" style="display: flex;
+    <div style="display: flex;
                                      gap:5px">
       <div v-if="is_selected==pages[3]" class="frame_427318741 is_select">
         <p>
@@ -53,8 +55,41 @@
           Hoạt động ngoại khóa</p>
       </div>
     </div>
+    <div v-if="user_data.role=='cadre'||user_data.role=='teacher'" style="display: flex;
+                                     gap:5px">
+      <div v-if="is_selected==pages[4]" class="frame_427318741 is_select">
+        <p>
+          Quản lý học sinh</p>
+      </div>
+      <div v-else class="frame_427318741" @click="onClick(4)">
+        <p>
+          Quản lý học sinh</p>
+      </div>
+    </div>
+    <div v-if="user_data.role=='cadre'||user_data.role=='teacher'" style="display: flex;
+                                     gap:5px">
+      <div v-if="is_selected==pages[5]" class="frame_427318741 is_select">
+        <p>
+          Quản lý giáo viên</p>
+      </div>
+      <div v-else class="frame_427318741" @click="onClick(5)">
+        <p>
+          Quản lý giáo viên</p>
+      </div>
+    </div>
+    <div v-if="user_data.role=='cadre'||user_data.role=='teacher'" style="display: flex;
+                                     gap:5px">
+      <div v-if="is_selected==pages[6]" class="frame_427318741 is_select">
+        <p>
+          Quản lý lớp học</p>
+      </div>
+      <div v-else class="frame_427318741" @click="onClick(6)">
+        <p>
+          Quản lý lớp học</p>
+      </div>
+    </div>
     <div>
-       <a href="/web/session/logout?redirect=/web">Đăng xuất</a>
+      <a href="/web/session/logout?redirect=/web">Đăng xuất</a>
     </div>
   </div>
 
@@ -64,9 +99,12 @@ import {defineComponent} from 'vue'
 
 export default defineComponent({
   name: "SideBar",
+  props: {
+    user_data: Object
+  },
   data() {
     return {
-      pages: ['info', 'schedule', 'learning_outcome', 'extracurricular_activities'],
+      pages: ['info', 'schedule', 'learning_outcome', 'extracurricular_activities', 'student_management', 'teacher_management', 'class_management'],
       is_selected: 'info'
     }
   },

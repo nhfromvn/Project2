@@ -10,37 +10,20 @@
         <xpath expr="//div[@id='wrapwrap']/main" position="attributes">
             <attribute name="t-att-style" add="('background:#ffffff;')"/>
         </xpath>
-<!--         <xpath expr="//div[[contains(@class, 'container')]]" position="replace">-->
-<!--             <div></div>-->
-<!--        </xpath>-->
+<!--                         <xpath expr="//div[@id='oe_main_menu_navbar']" position="replace">-->
+<!--                             <div></div>-->
+<!--                        </xpath>-->
     </template>
 
     <template id="web_login_inherit" name="NS Frontend Layout" inherit_id="web.login">
         <xpath expr="//form" position="before">
             <div style="text-align:left;">
                 <div class="thpt_login">Đăng nhập</div>
-                <div>Đăng nhập dưới vai trò:</div>
-                <div class="role-radio">
-                    <input type="radio" id="option1"/>
-                    <div>Học Sinh</div>
-                </div>
-                <div class="role-radio">
-                    <input type="radio" id="option1"/>
-                    <div>Giáo viên</div>
-                </div>
-                <div class="role-radio">
-                    <input type="radio" id="option1"/>
-                    <div>Giáo vụ</div>
-
-                </div>
-                <div class="role-radio">
-                    <input type="radio" id="option1"/>
-                    <div>Ban giám hiệu</div>
-                </div>
             </div>
         </xpath>
         <xpath expr="//form" position="replace">
-            <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post"
+            <form style="position:relative;top:200px" class="oe_login_form" role="form" t-attf-action="/web/login"
+                  method="post"
                   onsubmit="this.action = '/web/login' + location.hash">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
@@ -56,8 +39,37 @@
                         </span>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="Role">Hãy chọn vai trò:</label>
+                    <div style="display:flex;gap:20px">
+                        <div style="flex:1">
+                            <input type="radio" name="role" required="required" value="student"
+                                   maxlength="4096"/>
+                            Học sinh
+                        </div>
+                        <div style="flex:1">
+                            <input type="radio" name="role" required="required" value="teacher"
+                                   maxlength="4096"/>
+                            Giáo viên
+                        </div>
+                    </div>
+                    <div style="display:flex;gap: 20px">
+                         <div style="flex:1">
+                            <input type="radio" name="role" required="required" value="cadre"
+                                   maxlength="4096"/>
+                            Cán bộ
+                        </div>
+                         <div style="flex:1">
+                            <input type="radio" name="role" required="required" value="admin"
+                                   maxlength="4096"/>
+                            Ban giám hiệu
+                        </div>
+                    </div>
+
+                </div>
                 <div class="form-group field-login">
-                    <input type="text" placeholder="Tài khoản" name="login" t-att-value="login" id="login" class="input_setting"
+                    <input type="text" placeholder="Tài khoản" name="login" t-att-value="login" id="login"
+                           class="input_setting"
                            required="required"
                            autofocus="autofocus" autocapitalize="off"/>
                 </div>
@@ -83,12 +95,18 @@
                 </div>
 
                 <input type="hidden" name="redirect" t-att-value="'/thpt'"/>
+
             </form>
         </xpath>
     </template>
     <template id="thpt.sigup_resest" inherit_id="thpt.web_login_inherit" name="Sign up Reset">
         <xpath expr="//button[@type='submit']" position="after">
-            <div></div>
+            <div class="justify-content-between mt-2 d-flex small">
+                <a t-if="signup_enabled" t-attf-href="/web/signup?{{ keep_query() }}">Don't have an account?</a>
+                <a t-if="reset_password_enabled" t-attf-href="/web/reset_password?{{ keep_query() }}">Reset Password</a>
+            </div>
         </xpath>
     </template>
+
+
 </odoo>

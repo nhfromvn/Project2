@@ -1,50 +1,30 @@
 <template>
-  <NavBar @CustomEventChanged="changeState"></NavBar>
-  <div v-if="state==states[0]">
-    <div style="display: flex">
-      <SideBar :is_selected="is_selected" @CustomEventChanged="get_select_id"/>
-      <DashBoard v-if="is_selected==pages[0]" class="dashboard-container"/>
-      <Schedule v-if="is_selected==pages[1]" class="dashboard-container"/>
-      <LearningOutcome class="dashboard-container" v-if="is_selected==pages[2]"/>
-      <ExtracurricularActivities class="dashboard-container"  v-if="is_selected==pages[3]"/>
-    </div>
-  </div>
 
+  <CadreHome v-if="role=='cadre'" :user_data="cadre_data"/>
+  <StudentHome v-if="role=='student'" :user_data="cadre_data"/>
+  <TeacherHome v-if="role=='teacher'" :user_data="cadre_data"/>
 
 </template>
 <script>
-import DashBoard from "./components/DashBoard.vue";
-import SideBar from "./components/SideBar.vue";
-import LogIn from "./components/LogIn.vue";
-import NavBar from "./components/NavBar.vue";
-import Schedule from "./components/Schedule.vue";
-import LearningOutcome from "./components/LearningOutcome.vue";
-import ExtracurricularActivities from "./components/ExtracurricularActivities.vue";
+import CadreHome from "./components/CadreHome.vue";
+import axios from 'axios'
+import StudentHome from "./components/StudentHome.vue";
+import TeacherHome from "./components/TeacherHome.vue";
+
 export default {
   name: "App",
-  components: {ExtracurricularActivities, LearningOutcome, Schedule, NavBar, LogIn, SideBar, DashBoard},
+  components: {TeacherHome, StudentHome, CadreHome},
   data() {
     return {
-      pages: ['info', 'schedule', 'learning_outcome', 'extracurricular_activities'],
-      states: ['home','news', 'notification'],
-      state: 'home',
-      is_selected: 'info',
+      role: '',
+      cadre_data: {}
     }
   },
-  methods: {
-    get_select_id(data) {
-      this.is_selected = data
-      console.log(data)
-    },
-    changeState(data) {
-      this.state = this.states[data]
-      console.log(this.states[data])
-    }
-
-  },
-
   mounted() {
-    console.log("Hello shopify")
+    this.cadre_data = window.user_data
+    this.role = window.user_data.role
+    console.log(this.role)
+    console.log(this.cadre_data)
   }
 
 }

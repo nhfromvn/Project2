@@ -12,3 +12,6 @@ from . import student_class
 from . import cadre
 from . import admin
 from . import parent
+from . import learning_outcome
+from . import news
+from . import res_users

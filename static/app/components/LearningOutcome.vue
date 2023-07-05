@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>
-      Thông tin môn học
+      Học tập
     </h2>
     <hr>
     <table class="table table-responsive table-bordered">
