@@ -16,6 +16,8 @@
         <div class="infomation">Giới tính: {{ user_data.gender.name }}</div>
         <div class="infomation">Ngày sinh: {{ user_data.dob }}</div>
         <div v-if="user_data.role=='cadre'" class="infomation">Học vấn: {{ user_data.literacy }}</div>
+        <div v-if="user_data.role=='cadre'" class="infomation">Thời gian làm việc: {{ user_data.working_time }} năm</div>
+           <div v-if="user_data.role=='cadre'" class="infomation">Văn phòng: {{ user_data.team_in_charge }}</div>
       </div>
       <div style="flex:1">
         <div class="infomation">Dân tộc: {{ user_data.ethnicity }}</div>
@@ -113,8 +115,7 @@ export default defineComponent({
   },
   mounted() {
     console.log(this.user_data)
-    if(this.user_data.role == 'student')
-    {
+    if (this.user_data.role == 'student') {
       this.user_data.list_class_student.sort((a, b) => {
         if (a.last_name == b.last_name) {
           return a.first_name.localeCompare(b.first_name)

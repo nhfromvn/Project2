@@ -108,7 +108,9 @@ class Thpt(http.Controller):
                 'phone': cadre.phone,
                 'address': cadre.address,
                 'literacy': cadre.literacy,
-                'image_url': cadre.image_url
+                'image_url': cadre.image_url,
+                'working_time': cadre.working_time,
+                'team_in_charge': cadre.team_in_charge
 
             }})
         else:
