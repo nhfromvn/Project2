@@ -1,30 +1,50 @@
 <odoo>
     <data>
-<!--
-          <record id="object0" model="customaddons/thpt.customaddons/thpt">
-            <field name="name">Object 0</field>
-            <field name="value">0</field>
-          </record>
-
-          <record id="object1" model="customaddons/thpt.customaddons/thpt">
-            <field name="name">Object 1</field>
-            <field name="value">10</field>
-          </record>
-
-          <record id="object2" model="customaddons/thpt.customaddons/thpt">
-            <field name="name">Object 2</field>
-            <field name="value">20</field>
-          </record>
-
-          <record id="object3" model="customaddons/thpt.customaddons/thpt">
-            <field name="name">Object 3</field>
-            <field name="value">30</field>
-          </record>
-
-          <record id="object4" model="customaddons/thpt.customaddons/thpt">
-            <field name="name">Object 4</field>
-            <field name="value">40</field>
-          </record>
--->
+        <record id="user_demo1" model="res.users">
+            <field name="name">Demo User</field>
+            <field name="login">student</field>
+            <field name="password">student</field>
+            <field name="role">student</field>
+        </record>
+        <record id="user_demo2" model="res.users">
+            <field name="name">Demo User</field>
+            <field name="login">teacher</field>
+            <field name="password">teacher</field>
+            <field name="role">teacher</field>
+        </record>
+        <record id="user_demo3" model="res.users">
+            <field name="name">Demo User</field>
+            <field name="login">cadre</field>
+            <field name="password">cadre</field>
+            <field name="role">cadre</field>
+        </record>
+        <record id="demo_student" model="student">
+            <field name="first_name">Demo User</field>
+            <field name="last_name">student</field>
+            <field name="gender">True</field>
+            <field name="student_class">1</field>
+            <field name="user">13</field>
+        </record>
+        <record id="demo_teacher" model="teacher">
+            <field name="first_name">Demo User</field>
+            <field name="last_name">teacher</field>
+            <field name="gender">True</field>
+            <field name="student_class">1</field>
+            <field name="ethnicity">Kinh</field>
+            <field name="user">14</field>
+        </record>
+        <record id="demo_cadre" model="cadre">
+            <field name="first_name">Demo User</field>
+            <field name="last_name">cadre</field>
+            <field name="gender">True</field>
+            <field name="user">15</field>
+        </record>
+        <record id="demo_class" model="student.class">
+            <field name="name">12D</field>
+            <field name="teacher">1</field>
+        </record>
+        <record id="test" model="cadre">
+            <field name="first_name">test</field>
+        </record>
     </data>
 </odoo>

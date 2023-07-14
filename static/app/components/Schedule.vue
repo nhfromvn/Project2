@@ -37,12 +37,23 @@
       </tr>
 
       </thead>
-      <tbody>
+      <tbody v-if="user_data.role=='student'">
       <template v-for="(row,index) in list">
         <tr>
           <td>Tiết {{ index + 1 }}</td>
           <template v-for="schedule in row">
-            <td v-if="schedule"> {{ schedule.subject }}, Phòng {{ schedule.classroom }}</td>
+            <td v-if="schedule"> {{ schedule.subject }}</td>
+            <td v-else></td>
+          </template>
+        </tr>
+      </template>
+      </tbody>
+      <tbody v-else>
+      <template v-for="(row,index) in list">
+        <tr>
+          <td>Tiết {{ index + 1 }}</td>
+          <template v-for="schedule in row">
+            <td v-if="schedule"> {{ schedule.subject }}, {{ schedule.class }}</td>
             <td v-else></td>
           </template>
         </tr>
@@ -71,27 +82,53 @@ export default defineComponent({
     }
   },
   mounted() {
-    for (let i = 0; i < this.list.length; i++) {
-      this.list[i] = new Array(7)
-    }
-    for (let schedule of this.user_data.list_schedule_student.filter(e => e.semester == this.semester)) {
-      let i = schedule.class_time - 1
-      let j = schedule.date_of_week - 2
-      this.list[i][j] = schedule
-    }
-  },
-  watch: {
-    semester: function () {
+    if (this.user_data.role == 'student') {
       for (let i = 0; i < this.list.length; i++) {
-        for (let j = 0; j < this.list[i].length; j++) {
-          this.list[i][j] = null;
-        }
+        this.list[i] = new Array(6)
       }
       for (let schedule of this.user_data.list_schedule_student.filter(e => e.semester == this.semester)) {
         let i = schedule.class_time - 1
         let j = schedule.date_of_week - 2
         this.list[i][j] = schedule
       }
+    } else {
+      for (let i = 0; i < this.list.length; i++) {
+        this.list[i] = new Array(6)
+      }
+      for (let schedule of this.user_data.list_schedule_teacher.filter(e => e.semester == this.semester)) {
+        let i = schedule.class_time - 1
+        let j = schedule.date_of_week - 2
+        this.list[i][j] = schedule
+      }
+    }
+
+  },
+  watch: {
+    semester: function () {
+      if (this.user_data.role == 'student') {
+        for (let i = 0; i < this.list.length; i++) {
+          for (let j = 0; j < this.list[i].length; j++) {
+            this.list[i][j] = null;
+          }
+        }
+        for (let schedule of this.user_data.list_schedule_student.filter(e => e.semester == this.semester)) {
+          let i = schedule.class_time - 1
+          let j = schedule.date_of_week - 2
+          this.list[i][j] = schedule
+        }
+      } else {
+        for (let i = 0; i < this.list.length; i++) {
+          for (let j = 0; j < this.list[i].length; j++) {
+            this.list[i][j] = null;
+          }
+        }
+        for (let schedule of this.user_data.list_schedule_teacher.filter(e => e.semester == this.semester)) {
+          let i = schedule.class_time - 1
+          let j = schedule.date_of_week - 2
+          this.list[i][j] = schedule
+        }
+      }
+
     }
   }
 })

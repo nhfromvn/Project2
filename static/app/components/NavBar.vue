@@ -6,9 +6,9 @@
     <div @click="onClick(1)" class="navItem">
       Tin tuc
     </div>
-    <div @click="onClick(2)" class="navItem">
-      Thong bao
-    </div>
+<!--    <div @click="onClick(2)" class="navItem">-->
+<!--      Thong bao-->
+<!--    </div>-->
   </div>
 </template>
 <script>

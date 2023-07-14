@@ -7,3 +7,6 @@ class Student(models.Model):
     _inherit = 'person'
     student_class = fields.Many2one('student.class')
     user = fields.Many2one('res.users')
+    serial = fields.Integer()
+    extracurricular_activitie = fields.Many2one('extracurricular.activities')
+

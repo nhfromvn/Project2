@@ -10,10 +10,12 @@ import NavBar from "./NavBar.vue";
 import ExtracurricularActivities from "./ExtracurricularActivities.vue";
 import Schedule from "./Schedule.vue";
 import axios from "axios";
+import ExtracurricularActivity from "./ExtracurricularActivity.vue";
 
 export default defineComponent({
   name: "StudentHome",
   components: {
+    ExtracurricularActivity,
     Schedule,
     ExtracurricularActivities,
     NavBar,
@@ -60,20 +62,16 @@ export default defineComponent({
           }
         }
       })
+    },
+    registerActivity(param) {
+      axios.post('/thpt/register/activity', param).then((res) => {
+        console.log(res)
+        window.location.reload()
+      })
     }
-
   },
   mounted() {
     console.log(this.user_data)
-    let self = this
-    axios.get('thpt/get/data').then((res) => {
-      console.log(res)
-      self.student_management_temp = res.data
-      self.class_management_temp = res.data.classes
-      self.teacher_management_temp = res.data.teachers
-      console.log(self.student_management_temp)
-      console.log(self.user_data)
-    })
   }
 })
 </script>
@@ -88,9 +86,11 @@ export default defineComponent({
         <DashBoard :user_data="user_data" :proptemp="student_management_temp" v-if="is_selected==pages[0]"
                    class="dashboard-container"/>
         <Schedule :user_data="user_data" v-if="is_selected==pages[1]" class="dashboard-container"/>
-        <LearningOutcome class="dashboard-container" v-if="is_selected==pages[2]"></LearningOutcome>
-        >
-        <ExtracurricularActivities class="dashboard-container" v-if="is_selected==pages[3]"/>
+        <LearningOutcome :user_data="user_data" class="dashboard-container"
+                         v-if="is_selected==pages[2]"></LearningOutcome>
+
+        <ExtracurricularActivity @register="registerActivity" :user_data="user_data" class="dashboard-container"
+                                 v-if="is_selected==pages[3]"/>
       </div>
     </div>
   </div>

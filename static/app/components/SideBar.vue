@@ -12,12 +12,12 @@
       <div v-if="is_selected==pages[0]" class="frame_427318741 is_select">
         <p v-if="user_data.role=='student'">Thông tin học sinh</p>
         <p v-if="user_data.role=='cadre'">Thông tin cán bộ </p>
-        <p v-if="user_data.role=='teacher'">Thông tin học giáo viên</p>
+        <p v-if="user_data.role=='teacher'">Thông tin giáo viên</p>
       </div>
       <div v-else class="frame_427318741" @click="onClick(0)">
         <p v-if="user_data.role=='student'">Thông tin học sinh</p>
         <p v-if="user_data.role=='cadre'">Thông tin cán bộ </p>
-        <p v-if="user_data.role=='teacher'">Thông tin học giáo viên</p>
+        <p v-if="user_data.role=='teacher'">Thông tin giáo viên</p>
       </div>
     </div>
 
@@ -55,7 +55,7 @@
           Hoạt động ngoại khóa</p>
       </div>
     </div>
-    <div v-if="user_data.role=='cadre'||user_data.role=='teacher'" style="display: flex;
+    <div v-if="user_data.role=='cadre'" style="display: flex;
                                      gap:5px">
       <div v-if="is_selected==pages[4]" class="frame_427318741 is_select">
         <p>
@@ -66,7 +66,7 @@
           Quản lý học sinh</p>
       </div>
     </div>
-    <div v-if="user_data.role=='cadre'||user_data.role=='teacher'" style="display: flex;
+    <div v-if="user_data.role=='cadre'" style="display: flex;
                                      gap:5px">
       <div v-if="is_selected==pages[5]" class="frame_427318741 is_select">
         <p>
@@ -77,7 +77,7 @@
           Quản lý giáo viên</p>
       </div>
     </div>
-    <div v-if="user_data.role=='cadre'||user_data.role=='teacher'" style="display: flex;
+    <div v-if="user_data.role=='cadre'||(user_data.role=='teacher'&&user_data.main_teacher)" style="display: flex;
                                      gap:5px">
       <div v-if="is_selected==pages[6]" class="frame_427318741 is_select">
         <p>
@@ -86,6 +86,17 @@
       <div v-else class="frame_427318741" @click="onClick(6)">
         <p>
           Quản lý lớp học</p>
+      </div>
+    </div>
+      <div v-if="user_data.role=='cadre'" style="display: flex;
+                                     gap:5px">
+      <div v-if="is_selected==pages[7]" class="frame_427318741 is_select">
+        <p>
+          Quản lý tin tức</p>
+      </div>
+      <div v-else class="frame_427318741" @click="onClick(7)">
+        <p>
+          Quản lý tin tức</p>
       </div>
     </div>
     <div>
@@ -104,7 +115,7 @@ export default defineComponent({
   },
   data() {
     return {
-      pages: ['info', 'schedule', 'learning_outcome', 'extracurricular_activities', 'student_management', 'teacher_management', 'class_management'],
+      pages: ['info', 'schedule', 'learning_outcome', 'extracurricular_activities', 'student_management', 'teacher_management', 'class_management','new_management'],
       is_selected: 'info'
     }
   },

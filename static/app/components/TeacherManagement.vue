@@ -32,13 +32,15 @@ export default defineComponent({
       state: 'dashboard',
       states: ['dashboard', 'add', 'show'],
       changing: false,
-      subjects: ['Toán', 'Vật lí', 'Hóa học', 'Sinh học', 'Văn', 'Lịch sử', 'Địa lí', 'Giáo dục công dân', 'Công nghệ', 'Tin học', 'Thể dục'],
+      subjects: ['Toán', 'Vật lý', 'Hóa học', 'Sinh học', 'Văn', 'Lịch sử', 'Địa lý', 'Giáo dục công dân', 'Công nghệ', 'Tin học', 'Thể dục'],
+      literacies: ['Thạc sỹ', 'Tiến sĩ', 'Đại học', 'Phổ thông'],
       selected_teacher: {},
       new_teacher: {
         first_name: '',
         middle_name: '',
         last_name: '',
         _class: '',
+        subject: '',
         gender: {
           name: 'Nam',
           value: true
@@ -173,12 +175,8 @@ export default defineComponent({
           <td>{{ teacher.last_name }}</td>
           <td>{{ teacher.literacy }}</td>
           <td>{{ teacher.dob }}</td>
-
           <td>
-            <div style="display: flex;gap: 10px;text-decoration: underline; color: #1c21a8"><a
-                v-for="subject in teacher.subjects">
-              {{ subject.name }} </a>
-            </div>
+            {{ teacher.subject}}
           </td>
           <td>
             <div style="display: flex; gap: 15px">
@@ -234,6 +232,15 @@ export default defineComponent({
           </div>
           <div class="input_form">
             <label>
+              Bộ môn
+            </label>
+            <select v-model="new_teacher.subject">
+              <option  v-for="subject in subjects" :value="subject">{{ subject }}
+              </option>
+            </select>
+          </div>
+          <div class="input_form">
+            <label>
               Giới tính
             </label>
             <select v-model="new_teacher.gender">
@@ -261,7 +268,11 @@ export default defineComponent({
             <label>
               Học vấn
             </label>
-            <input type="text" v-model="new_teacher.literacy"/>
+            <select v-model="new_teacher.literacy">
+              <option v-for="literacy in literacies" :value="literacy">
+                {{ literacy }}
+              </option>
+            </select>
           </div>
           <div class="input_form">
             <label>
@@ -307,11 +318,7 @@ export default defineComponent({
           <div class="infomation">Giới tính: {{ selected_teacher.gender.name }}</div>
           <div class="infomation">Ngày sinh: {{ selected_teacher.dob }}</div>
           <div class="infomation">Học vấn: {{ selected_teacher.literacy }}</div>
-          <div class="infomation">Bộ môn:
-            <template v-for="(subject,index) in selected_teacher.subjects">{{ subject.name }}
-              <template v-if="index<selected_teacher.subjects.length-1">,</template>
-
-            </template>
+          <div class="infomation">Bộ môn: {{selected_teacher.subject}}
           </div>
         </div>
         <div style="flex:1">
@@ -352,6 +359,15 @@ export default defineComponent({
               </option>
             </select>
           </div>
+           <div class="input_form">
+            <label>
+              Bộ môn
+            </label>
+            <select v-model="selected_teacher.subject">
+              <option  v-for="subject in subjects" :value="subject">{{ subject }}
+              </option>
+            </select>
+          </div>
           <div class="input_form">
             <label>
               Giới tính
@@ -386,7 +402,11 @@ export default defineComponent({
             <label>
               Học vấn
             </label>
-            <input type="text" v-model="selected_teacher.literacy"/>
+            <select v-model="new_teacher.literacy">
+              <option v-for="literacy in literacies" :value="literacy">
+                {{ literacy }}
+              </option>
+            </select>
           </div>
           <div class="input_form">
             <label>

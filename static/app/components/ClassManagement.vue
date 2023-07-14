@@ -1,26 +1,26 @@
-<template>
-  <div>
-    <h2>Quản lý lớp học</h2>
-    <hr/>
-    <table class="table table-responsive table-bordered">
-      <thead>
-      <tr>
-        <th>Tên lớp</th>
-        <th>Giáo viên chủ nhiệm</th>
-        <th>Tổng học sinh</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="_class in proptemp.classes">
-        <td>{{_class.name}}</td>
-        <td>{{ _class.teacher}}</td>
-        <td>{{ _class.size}}</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+<!--<template>-->
+<!--  <div>-->
+<!--    <h2>Quản lý lớp học</h2>-->
+<!--    <hr/>-->
+<!--    <table class="table table-responsive table-bordered">-->
+<!--      <thead>-->
+<!--      <tr>-->
+<!--        <th>Tên lớp</th>-->
+<!--        <th>Giáo viên chủ nhiệm</th>-->
+<!--        <th>Tổng học sinh</th>-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--      <tr v-for="_class in proptemp.classes">-->
+<!--        <td>{{_class.name}}</td>-->
+<!--        <td>{{ _class.teacher}}</td>-->
+<!--        <td>{{ _class.size}}</td>-->
+<!--      </tr>-->
+<!--      </tbody>-->
+<!--    </table>-->
+<!--  </div>-->
 
-</template>
+<!--</template>-->
 <script>
 import {defineComponent} from 'vue'
 
@@ -28,9 +28,174 @@ export default defineComponent({
   name: "ClassManagement",
   props: {
     proptemp: Object
+  },
+  computed: {
+    list_teacher() {
+      return this.proptemp.teachers.map(function (e) {
+        return {
+          id: e.id,
+          name: e.first_name + ' ' + e.middle_name + ' ' + e.last_name
+        }
+      })
+    }
+  },
+  data() {
+    return {
+
+      state: 'dashboard',
+      states: ['dashboard', 'add', 'show'],
+      changing: false,
+      subjects: ['Toán', 'Vật lý', 'Hóa học', 'Sinh học', 'Văn', 'Lịch sử', 'Địa lý', 'Giáo dục công dân', 'Công nghệ', 'Tin học', 'Thể dục'],
+      selected__class: {},
+      new__class: {
+        name: '',
+        teacher: {
+          id: null,
+          name: '',
+        }
+      }
+    }
+  },
+  methods: {
+    saveChange(_class) {
+      if (!this.changing) {
+        alert('Không có gì để lưu')
+      } else {
+        this.$emit('changeClass', _class)
+      }
+
+    },
+    changeStudent() {
+      console.log(this.changing)
+      this.changing = true
+    },
+    cancel() {
+
+      if (this.changing) {
+        this.changing = false
+      } else {
+        this.state = this.states[0];
+      }
+    },
+    formStudent() {
+      this.state = this.states[1]
+    },
+    add() {
+      if ( !this.new__class.teacher || !this.new__class.name) {
+        alert('Chưa điền đủ thông tin bắt buộc')
+      } else {
+        this.$emit('addNewClass', this.new__class)
+      }
+    },
+    show(_class) {
+      this.selected__class = _class
+      this.state = this.states[2]
+    }
+  },
+  mounted() {
+    this.test = window
+    this.proptemp.classes.sort((a, b) => {
+
+      return a.name.localeCompare(b.name)
+    })
   }
 })
 </script>
+<template>
+  <div>
+    <h2>
+      Quản lý lớp học
+    </h2>
+    <hr>
+    <div v-if="state==states[0]">
+      <h3>Danh sách </h3>
+      <table class="table table-responsive table-bordered">
+        <thead>
+        <tr>
+          <th>Tên lớp</th>
+          <th>Giáo viên chủ nhiệm</th>
+          <th>Tổng học sinh</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="_class in proptemp.classes">
+          <td>{{ _class.name }}</td>
+          <td>{{ _class.teacher.name }}</td>
+          <td>{{ _class.size }}</td>
+          <td style="display: flex; gap: 15px">
+            <a @click="show(_class)" style="    text-decoration: underline;
+    color: #0A58CA;"> Chi tiết</a>
+          </td>
+        </tr>
+        </tbody>
+
+      </table>
+      <div style="justify-content: flex-end; display: flex">
+        <button style="width: 300px; height: 40px" @click="formStudent">Thêm lớp học</button>
+      </div>
+    </div>
+    <div v-if="state==states[1]">
+      <h3>Thêm tiết học</h3>
+      <div style="display: flex; gap: 15px; justify-content: end">
+        <button @click="add">Thêm</button>
+        <button @click="cancel">Quay lại</button>
+      </div>
+      <div style="display: flex">
+        <div>
+          <div class="input_form">
+            <label>
+              Giáo viên
+            </label>
+            <select required v-model="new__class.teacher">
+              <option v-for="teacher in list_teacher" :value="teacher">{{ teacher.name }}
+              </option>
+            </select>
+          </div>
+          <div class="input_form">
+            <label>
+              Tên lớp
+            </label>
+            <input type="text" v-model="new__class.name "/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="state==states[2]">
+      <div style="display:flex;align-items: center; gap: 10px;margin-bottom: 10px">
+        <h3 style="margin: 0">Quản lý tiết học</h3> <a v-if="!changing" @click="changeStudent" style="  text-decoration: underline;
+  color: #0A58CA;">Sửa</a>
+      </div>
+      <div v-if="!changing" >
+
+        <div class="infomation">Tên lớp: {{ selected__class.name }}
+        </div>
+        <div class="infomation">Giáo viên: {{ selected__class.teacher.name }}
+        </div>
+      </div>
+      <div v-else style="display: flex">
+
+        <div class="input_form">
+          <label>
+            Tên lớp
+          </label>
+         <input type="text" v-model="selected__class.name">
+        </div>
+        <div class="input_form">
+          <label>
+            Giáo viên
+          </label>
+          <select required v-model="selected__class.teacher">
+            <option v-for="teacher in list_teacher" :value="teacher">{{ teacher.name }}
+            </option>
+          </select>
+        </div>
+
+      </div>
+      <button @click="saveChange(selected__class)">Lưu</button>
+      <button @click="cancel">Quay lại</button>
+    </div>
+  </div>
+</template>
 
 
 <style scoped>
@@ -98,197 +263,16 @@ export default defineComponent({
   background-size: 21px 21px;
   background-repeat: no-repeat;
 }
+
+a {
+  text-decoration: underline;
+  color: #0A58CA;
+}
+
+
+.infomation {
+  font-weight: 400;
+  font-size: 19px;
+  font-family: Inter;
+}
 </style>
-<!--<template>-->
-<!--  <div>-->
-<!--    <h2>-->
-<!--      Quản lý học sinh-->
-<!--    </h2>-->
-<!--    <hr>-->
-<!--    <h3>Danh sách </h3>-->
-<!--    <div v-if="state==states[0]">-->
-<!--      <table class="table table-responsive table-bordered">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--          <th>-->
-<!--            Họ-->
-<!--          </th>-->
-<!--          <th>Tên đệm</th>-->
-<!--          <th> Tên</th>-->
-<!--          <th>Giới tính</th>-->
-<!--          <th>Ngày sinh</th>-->
-<!--          <th>Dân tộc</th>-->
-<!--          <th> Tôn giáo</th>-->
-<!--          <th> Số điện thoại</th>-->
-<!--          <th> Địa chỉ</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr v-for="student in proptemp.students">-->
-<!--          <td>{{ student.first_name }}</td>-->
-<!--          <td>{{ student.middle_name }}</td>-->
-<!--          <td>{{ student.last_name }}</td>-->
-<!--          <td>{{ student.gender.name }}</td>-->
-<!--          <td>{{ student.dob }}</td>-->
-<!--          <td>{{ student.ethnicity }}</td>-->
-<!--          <td>{{ student.religion }}</td>-->
-<!--          <td>{{ student.phone }}</td>-->
-<!--          <td>{{ student.address }}</td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--      </table>-->
-<!--      <div style="justify-content: flex-end; display: flex">-->
-<!--        <button style="width: 300px; height: 40px" @click="formStudent">Thêm học sinh</button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div v-if="state==states[1]">-->
-<!--      <div style="display: flex; gap: 15px; justify-content: end">-->
-<!--        <button @click="add">Thêm học sinh</button>-->
-<!--        <button @click="cancel">Quay lại</button>-->
-<!--      </div>-->
-<!--      <div style="display: flex">-->
-<!--        <div>-->
-<!--          <div class="input_form">-->
-<!--            <label>-->
-<!--              Họ-->
-<!--            </label>-->
-<!--            <input type="text" v-model="new_student.first_name"/>-->
-<!--          </div>-->
-<!--          <div class="input_form">-->
-<!--            <label>-->
-<!--              Tên đệm-->
-<!--            </label>-->
-<!--            <input type="text" v-model="new_student.middle_name"/>-->
-<!--          </div>-->
-<!--          <div class="input_form">-->
-<!--            <label>-->
-<!--              Tên-->
-<!--            </label>-->
-<!--            <input type="text" v-model="new_student.last_name"/>-->
-<!--          </div>-->
-<!--          <div class="input_form">-->
-<!--            <label>-->
-<!--              Lớp-->
-<!--            </label>-->
-<!--            <input type="text" v-model="new_student._class"/>-->
-<!--          </div>-->
-<!--          <div class="input_form">-->
-<!--            <label>-->
-<!--              Giới tính-->
-<!--            </label>-->
-<!--            <select v-model="new_student.gender">-->
-<!--              <option v-for="gender in new_student.genders" :value="gender">-->
-<!--                {{ gender.name }}-->
-<!--              </option>-->
-<!--            </select>-->
-<!--          </div>-->
-<!--          <div class="input_form">-->
-<!--            <label>-->
-<!--              Ngày sinh-->
-<!--            </label>-->
-<!--            <input type="date" v-model="new_student.dob"/>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div>-->
-<!--          <div class="input_form">-->
-<!--            <label>-->
-<!--              Dân tộc-->
-<!--            </label>-->
-<!--            <input type="text" v-model="new_student.ethnicity"/>-->
-<!--          </div>-->
-<!--          <div class="input_form">-->
-<!--            <label>-->
-<!--              Tôn giáo-->
-<!--            </label>-->
-<!--            <input type="text" v-model="new_student.religion"/>-->
-<!--          </div>-->
-<!--          <div class="input_form">-->
-<!--            <label>-->
-<!--              Số điện thoại-->
-<!--            </label>-->
-<!--            <input type="text" v-model="new_student.phone"/>-->
-<!--          </div>-->
-<!--          <div class="input_form">-->
-<!--            <label>-->
-<!--              Địa chỉ-->
-<!--            </label>-->
-<!--            <input type="text" v-model="new_student.address"/>-->
-<!--          </div>-->
-
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-
-<!--  </div>-->
-<!--</template>-->
-<!--<script>-->
-<!--import {defineComponent} from 'vue'-->
-<!--import dayjs from 'dayjs'-->
-
-<!--export default defineComponent({-->
-<!--  name: "StudentManagement",-->
-<!--  props: {-->
-<!--    proptemp: Object-->
-<!--  },-->
-<!--  computed: {},-->
-<!--  data() {-->
-<!--    return {-->
-<!--      state: 'dashboard',-->
-<!--      states: ['dashboard', 'add_student'],-->
-<!--      new_student: {-->
-<!--        first_name: '',-->
-<!--        middle_name: '',-->
-<!--        last_name: '',-->
-<!--        _class: '',-->
-<!--        genders: [-->
-<!--          {-->
-<!--            name: 'Nam',-->
-<!--            value: true,-->
-<!--          },-->
-<!--          {-->
-<!--            name: 'Nữ',-->
-<!--            value: false-->
-<!--          }-->
-<!--        ],-->
-<!--        gender: {-->
-<!--          name: 'Nam',-->
-<!--          value: true-->
-<!--        },-->
-<!--        dob: '',-->
-<!--        phone: '',-->
-<!--        address: '',-->
-<!--        ethnicity: '',-->
-<!--        religion: '',-->
-<!--        parent: [{-->
-<!--          first_name: '',-->
-<!--          middle_name: '',-->
-<!--          last_name: '',-->
-<!--          phone: '',-->
-<!--          job: '',-->
-<!--        }, {-->
-<!--          first_name: '',-->
-<!--          middle_name: '',-->
-<!--          last_name: '',-->
-<!--          phone: '',-->
-<!--          job: '',-->
-<!--        }]-->
-
-<!--      }-->
-<!--    }-->
-<!--  },-->
-<!--  methods: {-->
-<!--    cancel() {-->
-<!--      this.state = this.states[0];-->
-<!--    },-->
-<!--    formStudent() {-->
-<!--      this.state = this.states[1]-->
-<!--    },-->
-<!--    add() {-->
-<!--      this.$emit('addNewStudent', this.new_student)-->
-<!--    }-->
-<!--  },-->
-<!--  mounted() {-->
-<!--    this.new_student.dob = dayjs().format('YYYY-MM-DD');-->
-<!--  }-->
-<!--})-->
-<!--</script>-->

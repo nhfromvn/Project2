@@ -4,10 +4,10 @@ from odoo import models, fields, api
 class Person(models.Model):
     _name = 'person'
     first_name = fields.Char()
-    middle_name = fields.Char()
+    middle_name = fields.Char(default='Văn')
     last_name = fields.Char()
     age = fields.Integer()
-    dob = fields.Date()
+    dob = fields.Date(default=lambda self: fields.Datetime.now())
     gender = fields.Boolean()
     email = fields.Char()
     address = fields.Char(default='Ktx Bach khoa')

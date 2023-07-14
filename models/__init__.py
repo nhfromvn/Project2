@@ -15,3 +15,4 @@ from . import parent
 from . import learning_outcome
 from . import news
 from . import res_users
+from . import semester_outcome

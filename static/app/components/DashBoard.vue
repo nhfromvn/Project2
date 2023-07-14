@@ -3,7 +3,7 @@
   <div>
     <h2 v-if="user_data.role=='student'">Thông tin học sinh</h2>
     <h2 v-if="user_data.role=='cadre'">Thông tin cán bộ </h2>
-    <h2 v-if="user_data.role=='teacher'">Thông tin học giáo viên</h2>
+    <h2 v-if="user_data.role=='teacher'">Thông tin giáo viên</h2>
     <hr>
     <div>
       <img style="height: 200px;width: 200px" :src="user_data.image_url">
@@ -15,7 +15,8 @@
         <div v-if="user_data.role=='student'" class="infomation">Lớp: {{ user_data._class.name }}</div>
         <div class="infomation">Giới tính: {{ user_data.gender.name }}</div>
         <div class="infomation">Ngày sinh: {{ user_data.dob }}</div>
-        <div v-if="user_data.role=='cadre'" class="infomation">Học vấn: {{ user_data.literacy }}</div>
+        <div v-if="user_data.role=='cadre'||user_data.role=='teacher'" class="infomation">Học vấn: {{ user_data.literacy }}</div>
+        <div v-if="user_data.role=='teacher'" class="infomation">Bộ môn: {{ user_data.subject }}</div>
         <div v-if="user_data.role=='cadre'" class="infomation">Thời gian làm việc: {{ user_data.working_time }} năm</div>
            <div v-if="user_data.role=='cadre'" class="infomation">Văn phòng: {{ user_data.team_in_charge }}</div>
       </div>
@@ -31,24 +32,24 @@
       <div style="display: flex">
         <div style="flex:1">
           <div class="infomation">
-            Họ và tên bố:
+            Họ và tên bố: Hoàng Nam
           </div>
           <div class="infomation">
-            Số điện thoại:
+            Số điện thoại: 0817710104
           </div>
           <div class="infomation">
-            Nghề nghiệp:
+            Nghề nghiệp: Lập trình viên
           </div>
         </div>
         <div style="flex:1">
           <div class="infomation">
-            Họ và tên mẹ:
+            Họ và tên mẹ: Trần Ngọc Minh
           </div>
           <div class="infomation">
-            Số điện thoại:
+            Số điện thoại: 0817710104
           </div>
           <div class="infomation">
-            Nghề nghiệp:
+            Nghề nghiệp: Tự do
           </div>
         </div>
       </div>

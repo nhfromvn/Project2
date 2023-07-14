@@ -8,10 +8,12 @@
                  class="dashboard-container"/>
       <ScheduleManagement ref="schedule_ref" :proptemp="management_temp" v-if="is_selected==pages[1]"
                           class="dashboard-container"
-                          @addNewSchedule="addNewSchedule"
                           @changeSchedule="changeSchedule"/>
-      <LearningOutcome class="dashboard-container" v-if="is_selected==pages[2]"></LearningOutcome>
-      <ExtracurricularActivities class="dashboard-container" v-if="is_selected==pages[3]"/>
+      <LearningManagement :proptemp="management_temp" ref="learning_ref" @changeLearning="changeLearning"
+                          class="dashboard-container" v-if="is_selected==pages[2]"/>
+      <ExtracurricularActivities :user_data="user_data" :proptemp="management_temp" @saveActivity="saveActivity"
+                                 class="dashboard-container"
+                                 v-if="is_selected==pages[3]"/>
       <StudentManagement ref="student_ref" :proptemp="management_temp" class="dashboard-container"
                          @addNewStudent="addNewStudent"
                          @changeStudent="changeStudent"
@@ -20,8 +22,13 @@
                          v-if="is_selected==pages[5]"
                          @addNewTeacher="addNewTeacher"
                          @changeTeacher="changeTeacher"/>
-      />
-      <ClassManagement :proptemp="management_temp" class="dashboard-container" v-if="is_selected==pages[6]"/>
+      <ClassManagement ref="class_ref" :proptemp="management_temp" class="dashboard-container"
+                       v-if="is_selected==pages[6]"
+                       @addNewClass="addNewClass"
+                       @changeClass="changeClass"/>
+      <NewsManagement :proptemp="management_temp" class="dashboard-container"
+                      v-if="is_selected==pages[7]"
+                      @saveNews="saveNews"></NewsManagement>
     </div>
   </div>
 
@@ -41,10 +48,14 @@ import TeacherManagement from "./TeacherManagement.vue";
 import axios from 'axios'
 import ClassManagement from "./ClassManagement.vue";
 import ScheduleManagement from "./ScheduleManagement.vue";
+import LearningManagement from "./LearningManagement.vue";
+import NewsManagement from "./NewsManagement.vue";
 
 export default defineComponent({
       name: "CadreHome",
       components: {
+        NewsManagement,
+        LearningManagement,
         ScheduleManagement,
         ClassManagement,
         TeacherManagement,
@@ -56,7 +67,7 @@ export default defineComponent({
       },
       data() {
         return {
-          pages: ['info', 'schedule', 'learning_outcome', 'extracurricular_activities', 'student_management', 'teacher_management', 'class_management'],
+          pages: ['info', 'schedule', 'learning_outcome', 'extracurricular_activities', 'student_management', 'teacher_management', 'class_management', 'new_management'],
           states: ['home', 'news', 'notification'],
           state: 'home',
           is_selected: 'info',
@@ -112,48 +123,23 @@ export default defineComponent({
             }
           })
         },
-        addNewSchedule(params) {
-          let self = this
-          console.log('haha')
-          axios.post('/thpt/add/schedule', params).then((res) => {
-            console.log(res)
-            if (res.data.result) {
-              alert('Thêm thành công')
-              self.management_temp.schedules.push(res.data.result)
-              if (self.$refs.schedule_ref) {
-                self.$refs.schedule_ref.state = self.$refs.schedule_ref.states[0];
-                self.$refs.schedule_ref.proptemp.schedules.sort((a, b) => {
-                  if (a._class.name == b._class.name) {
-                    if (a.date_of_week == b.date_of_week) {
-                      return a.class_time - b.class_time
-                    }
-                    return a.date_of_week - b.date_of_week
-                  }
-                  return a._class.name.localeCompare(b._class.name)
-                })
-              }
-            }
-          })
-        },
         changeSchedule(params) {
           let self = this
           console.log(params)
-          axios.post('/thpt/save/schedule', params).then((res) => {
+          axios.post('/thpt/save/schedule', {schedules: params}).then((res) => {
             console.log(res)
             if (res.data.result) {
               alert('Sửa thành công')
-              if (self.$refs.schedule_ref) {
-                self.$refs.schedule_ref.changing = false
-                self.$refs.schedule_ref.proptemp.schedules.sort((a, b) => {
-                  if (a._class.name == b._class.name) {
-                    if (a.date_of_week == b.date_of_week) {
-                      return a.class_time - b.class_time
-                    }
-                    return a.date_of_week - b.date_of_week
-                  }
-                  return a._class.name.localeCompare(b._class.name)
-                })
-              }
+            }
+          })
+        },
+        changeLearning(params) {
+          let self = this
+          console.log(params)
+          axios.post('/thpt/save/subject', {subjects: params}).then((res) => {
+            console.log(res)
+            if (res.data.result) {
+              alert('Sửa thành công')
             }
           })
         },
@@ -197,7 +183,58 @@ export default defineComponent({
             }
           })
         },
+        addNewClass(params) {
+          let self = this
+          console.log('haha')
+          axios.post('/thpt/add/class', params).then((res) => {
+            console.log(res)
+            if (res.data.result) {
+              alert('Thêm thành công')
+              self.management_temp.classes.push(res.data.result)
+              if (self.$refs.class_ref) {
+                self.$refs.class_ref.state = self.$refs.class_ref.states[0];
+                self.$refs.class_ref.proptemp.classes.sort((a, b) => {
+                  return a.name.localeCompare(b.name)
+                })
+              }
+            }
+          })
+        },
+        changeClass(params) {
+          let self = this
+          console.log(params)
+          axios.post('/thpt/save/class', params).then((res) => {
+            console.log(res)
+            if (res.data.result) {
+              alert('Sửa thành công')
+              if (self.$refs.class_ref) {
+                self.$refs.class_ref.changing = false
+                self.$refs.class_ref.proptemp.classes.sort((a, b) => {
 
+                  return a.name.localeCompare(b.name)
+                })
+              }
+            }
+          })
+        },
+        saveActivity(param) {
+          console.log('haha')
+          axios.post('thpt/save/activity', param).then((res) => {
+            console.log(res)
+            if (res.data.result) {
+              alert('lưu thành công')
+            }
+          })
+        },
+        saveNews(param) {
+          console.log('haha')
+          axios.post('thpt/save/news', param).then((res) => {
+            console.log(res)
+            if (res.data.result) {
+              alert('lưu thành công')
+            }
+          })
+        },
       },
       mounted() {
         console.log(this.user_data)

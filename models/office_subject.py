@@ -6,4 +6,4 @@ class OfficeSubject(models.Model):
     name = fields.Char()
     office = fields.Char()
     num_teacher = fields.Integer()
-    teachers = fields.Many2many('teacher')
+    teachers = fields.One2many('teacher', 'office_subject')
